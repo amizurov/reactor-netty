@@ -281,7 +281,7 @@ public class HttpServerTests {
 
 		assertThat(HttpClient.create(c.address()
 		                              .getPort())
-		                     .get("/return", r -> r.failOnServerError(false))
+		                     .get("/return")
 		                     .block()
 		                     .status()
 		                     .code()).isEqualTo(500);
@@ -447,7 +447,7 @@ public class HttpServerTests {
 			                     .code()).isEqualTo(200);
 
 			assertThat(HttpClient.create(facade.getPort())
-			                     .get("/helloMan", req -> req.failOnClientError(false))
+			                     .get("/helloMan")
 			                     .block()
 			                     .status()
 			                     .code()).isEqualTo(404);
@@ -651,8 +651,7 @@ public class HttpServerTests {
 	}
 
 	private void doTestIssue186(HttpClient client) {
-		Mono<String> content = client.post("/", req -> req.failOnClientError(false)
-				                                          .sendString(Mono.just("bodysample")))
+		Mono<String> content = client.post("/", req -> req.sendString(Mono.just("bodysample")))
 				                      .flatMap(res -> res.receive()
 				                                         .aggregate()
 				                                         .asString());
